@@ -1,7 +1,64 @@
 
+import { Component, useEffect, useReducer, useState } from 'react';
 import './style.css';
-
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 function Main() {
+  // let htmlcode;
+  const navigate = useNavigate();
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  const [loggedin, setLoggedin] = useState(false);
+ useEffect(()=>{
+   check();
+ },[])
+function check(){
+    const user = {
+      username:localStorage.getItem("username"), password: localStorage.getItem("password")
+    };
+    console.log(localStorage.getItem("username"));
+    if(localStorage.getItem("username") === null && localStorage.getItem("password") === null)
+    {
+      setLoggedin(false);
+      return;
+    }
+    axios({
+      method: 'post',
+      url: 'http://malakhovkk.beget.tech/login.php',
+      data: JSON.stringify(user)
+    })
+  //         axios.post(
+  // 'http://malakhovkk.beget.tech/login.php',{body:user})
+  .then(res => {
+    if(res.data.message === 'logged in succefully')
+    {
+      setLoggedin(true); 
+    }
+    else
+    {
+      console.log(user)
+      navigate("/login");
+    }
+  })
+  }
+  function logout()
+  {
+    localStorage.clear();
+    check();
+    forceUpdate();
+  }
+  // useEffect(()=>{
+    
+  //   if(!check())
+  //   {
+  //     htmlcode = <a href="/login">Войти</a>
+  //   }
+  //   else
+  //   {
+  //     htmlcode = <a> {localStorage.getItem("username")}</a>
+  //     console.log(htmlcode)
+  //   }
+  // },[])
+  
   return (
       <>
     <div className="wrapper">
@@ -10,8 +67,12 @@ function Main() {
       <ul className="navigation">
         <li className="navigation__item"><a href="/main">Что такое AlgoSpec?</a></li> 
         <li className="navigation__item"><a href="/problems">Содержание</a></li>
-        <li className="navigation__item"><a href="#">Покупка</a></li>
-        <li className="navigation__item"><a href="#">Войти</a></li>
+          <li className="navigation__item"><a href="/main">Покупка</a></li>
+          <li className="navigation__item">
+          {loggedin ? <a> {localStorage.getItem("username")}</a> : <><a href="/login">Войти</a><a style={{"marginLeft":"10px"}} href="/registration">Зарегистрироваться</a></>} 
+          </li>
+          <li className="navigation__item">{loggedin ? <a onClick={logout}> Выйти</a> : <a></a>}</li>
+          {/* <a href="/login">Войти</a> */}
       </ul>
     </header>
     <section className="one_step">
@@ -208,7 +269,7 @@ function Main() {
         </div>
     </section>
     <footer className="footer">
-     <div className="footer__content"> © 2020 AlgoSpec</div>
+     <div className="footer__content"> © 2022 AlgoSpec</div>
     </footer>
 
   </div>

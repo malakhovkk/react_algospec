@@ -3,38 +3,48 @@ import { useState } from 'react';
 import axios from 'axios';
 import './style.css';
 import './style_login.css';
- 
-import JSON from 'parse-json';
+import { useNavigate } from "react-router-dom";
+import md5 from 'md5';
 
 function LogIn() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
     function submit_form(e)
     {
         console.log('form')
         e.preventDefault();
         const user = {
-            username, password
+            username, password: md5(password)
           };
           console.log(user);
 
           axios({
             method: 'post',
             url: 'http://malakhovkk.beget.tech/login.php',
-            data: user
+            data: JSON.stringify(user)
           })
 //         axios.post(
 // 'http://malakhovkk.beget.tech/login.php',{body:user})
       .then(res => {
-        console.log(res);
+        if(res.data.message === 'logged in succefully')
+        {
+          localStorage.setItem("username", user.username);
+          localStorage.setItem("password", user.password);
+          navigate("/main");
+        }
+        else
+        {
+          alert('Вы неправильно ввели данные')
+        }
       })
     }
   return (
       <>
     
     <div className="login">
-    <div className="login__get_key">Ввести ключ: </div>
+    <div className="login__get_key">Ввести данные: </div>
     <form className="login__form" onSubmit={(e) => submit_form(e)}>
         <div className="login__caption">Username: </div>
         <input type="text" name="username" value={username} onChange={(e) => setUsername(e.target.value)} className="login__input" />
@@ -247,7 +257,7 @@ function LogIn() {
           </div>
       </section>
       <footer className="footer">
-       <div className="footer__content"> © 2020 AlgoSpec</div>
+       <div className="footer__content"> © 2022 AlgoSpec</div>
       </footer>
 
     </div>
