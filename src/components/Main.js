@@ -297,13 +297,13 @@ function check(){
       return <div class="comment"><div class="username">{el.username}</div><br/>{el.comment}</div>
     })}
     </section>
-    <form className="login__form" id="comment" onSubmit={(e) => submit_form(e)}>
+    {loggedin ? <form className="login__form" id="comment" onSubmit={(e) => submit_form(e)}>
         <div className="login__caption">Username: {localStorage.getItem("username")} </div>
         <input type="text" name="username" value={localStorage.getItem("username")} hidden className="login__input" />
         <div className="login__caption">Отзыв: </div>
         <textarea name="comment" value={comment} onChange={(e) => setComment(e.target.value)} className="login__input" />
         <input type="submit" value="ОК" className="login__submit"/>
-    </form>
+    </form>:<></>}
     <footer className="footer">
      <div className="footer__content"> © 2022 AlgoSpec</div>
     </footer>
