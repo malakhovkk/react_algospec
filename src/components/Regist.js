@@ -47,7 +47,7 @@ function Regist() {
         <div className="login__caption">Username: </div>
         <input type="text" name="username" value={username} onChange={(e) => setUsername(e.target.value)} className="login__input" />
         <div className="login__caption">E-mail: </div>
-        <input type="text" name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="login__input" />
+        <input type="email" name="username" value={email} onChange={(e) => setEmail(e.target.value)} className="login__input" />
         <div className="login__caption">Пароль: </div>
         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} className="login__input" />
         <input type="submit" value="ОК" className="login__submit"/>
