@@ -8,9 +8,32 @@ function Main() {
   const navigate = useNavigate();
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const [loggedin, setLoggedin] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
  useEffect(()=>{
    check();
+   getComments();
  },[])
+ function getComments()
+ {
+  axios({
+    method: 'post',
+    url: 'http://malakhovkk.beget.tech/comments.php',
+  }).then(res => setComments(res.data) )
+ }
+ function submit_form(e)
+ {
+   e.preventDefault();
+   setComment("");
+  const data = {
+    username:localStorage.getItem("username"), comment
+  };
+  axios({
+    method: 'post',
+    url: 'http://malakhovkk.beget.tech/comment_create.php',
+    data: JSON.stringify(data)
+  })
+ }
 function check(){
     const user = {
       username:localStorage.getItem("username"), password: localStorage.getItem("password")
@@ -268,6 +291,19 @@ function check(){
            Курсы отличаются только длительностью доступа.
         </div>
     </section>
+    <section class="comments">
+      <h2>Отзывы:</h2>
+    {comments.map(el =>{
+      return <div class="comment"><div class="username">{el.username}</div><br/>{el.comment}</div>
+    })}
+    </section>
+    <form className="login__form" id="comment" onSubmit={(e) => submit_form(e)}>
+        <div className="login__caption">Username: {localStorage.getItem("username")} </div>
+        <input type="text" name="username" value={localStorage.getItem("username")} hidden className="login__input" />
+        <div className="login__caption">Отзыв: </div>
+        <textarea name="comment" value={comment} onChange={(e) => setComment(e.target.value)} className="login__input" />
+        <input type="submit" value="ОК" className="login__submit"/>
+    </form>
     <footer className="footer">
      <div className="footer__content"> © 2022 AlgoSpec</div>
     </footer>
