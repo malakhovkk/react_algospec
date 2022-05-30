@@ -293,8 +293,8 @@ function check(){
     </section>
     <section class="comments">
       <h2>Отзывы:</h2>
-    {comments.map(el =>{
-      return <div class="comment"><div class="username">{el.username}</div><br/>{el.comment}</div>
+    {comments.map((el,i) =>{
+      return <div key={i} class="comment"><div class="username">{el.username}</div><br/>{el.comment}</div>
     })}
     </section>
     {loggedin ? <form className="login__form" id="comment" onSubmit={(e) => submit_form(e)}>
